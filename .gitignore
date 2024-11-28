@@ -1,0 +1,5 @@
+**/*.o
+a.out
+mmc
+.vscode
+/scanner/Makefile

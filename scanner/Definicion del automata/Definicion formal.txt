@@ -1,0 +1,17 @@
+Quintupla(Q,Σ,Qo,F,T)
+
+-Q = 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,99
+
+-Σ = Letras Digitos +  -  (  ) , ; : =
+
+-Qo = 0
+
+-F = 2,4,5,6,7,8,9,10,12,13
+
+-T = Definidda mediante tabla de transiciones  y automata
+
+– Q es un conjunto finito de estados.
+– Σ es el alfabeto de caracteres reconocidos por el autómata.
+– q0 Perteneciente a Q es el estado inicial (único, no es un conjunto).
+– F Incluido en Q es el conjunto de estados finales.
+– T: Q x Σ -> Q es la función de transiciones. Puede ser definida mediante la tabla de transiciones.

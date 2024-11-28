@@ -1,0 +1,19 @@
+<objetivo> -> <programa> FDT 
+
+<programa> -> INICIO <listaSentencias> FIN
+
+<listaSentencias> -> <sentencia> {<sentencia>}
+
+<sentencia> -> ID ASIGNACIÓN <expresión> PUNTOYCOMA |
+                LEER PARENIZQUIERDO <listaIdentificadores> PARENDERECHO PUNTOYCOMA |
+                ESCRIBIR PARENIZQUIERDO <listaExpresiones> PARENDERECHO PUNTOYCOMA
+
+<listaIdentificadores> -> ID {COMA ID}
+
+<listaExpresiones> -> <expresión> {COMA <expresión>}
+
+<expresión> -> <primaria> {<operadorAditivo> <primaria>}
+
+<primaria> -> ID | CONSTANTE | PARENIZQUIERDO <expresión> PARENDERECHO
+
+<operadorAditivo> -> uno de SUMA RESTA
