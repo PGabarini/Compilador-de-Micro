@@ -8,6 +8,7 @@
 #define TAMANIO_BUFFER 20
 //typedef int TOKEN;
 
+extern FILE* ArchivoDelScanner;
 
 typedef int ESTADO;
 
@@ -16,6 +17,7 @@ typedef enum {
  PARENDERECHO, PUNTOYCOMA, COMA, ASIGNACION, SUMA, RESTA, FDT
 } TOKEN;
 
+void Imprimir(TOKEN token);
 
 const char *Buffer(void);
 

@@ -8,6 +8,7 @@ bb --> ID
 := --> ASIGNACION
 a --> ID
 + --> SUMA
++ --> SUMA
 3 --> CONSTANTE
 ; --> PUNTOYCOMA
 cc --> ID

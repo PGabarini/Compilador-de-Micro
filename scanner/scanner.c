@@ -2,6 +2,7 @@
 #include <string.h>
 
 
+
 char _buffer[TAMANIO_BUFFER+1];
 int  _posicion = 0;
 
@@ -21,17 +22,22 @@ const char *Buffer(void) {
 
 TOKEN esReservada(void) {
  if(!strcmp(Buffer(), "inicio")){
+    Imprimir(INICIO);
     return INICIO;
  }
  if(!strcmp(Buffer(), "fin")){
+    Imprimir(FIN);
     return FIN;
  }
  if(!strcmp(Buffer(), "leer")){
+    Imprimir(LEER);
     return LEER;
  }
  if(!strcmp(Buffer(), "escribir")){
+    Imprimir(ESCRIBIR);
     return ESCRIBIR;
  }
+ Imprimir(ID);
  return ID;
 }
  
@@ -117,30 +123,38 @@ TOKEN Scanner(void) {
                 return esReservada();
             case 4:
                 ungetc(caracter, stdin);
+                Imprimir(CONSTANTE);
                 return CONSTANTE; /* CONSTANTE */
             case 5:
                 AgregarCaracter(caracter);
+                Imprimir(SUMA);
                 return SUMA; /* SUMA */
             case 6:
                 AgregarCaracter(caracter);
+                Imprimir(RESTA);
                 return RESTA; /* RESTA */
             case 7:
                 AgregarCaracter(caracter);
+                Imprimir(PARENIZQUIERDO);
                 return PARENIZQUIERDO;  /* PARENIZQUIERDO */
             case 8:
                 AgregarCaracter(caracter);
+                Imprimir(PARENDERECHO);
                 return PARENDERECHO;  /* PARENDERECHO */
             case 9:
                 AgregarCaracter(caracter);
+                Imprimir(COMA);
                 return COMA;  /* COMA */
             case 10:
                 AgregarCaracter(caracter);
+                Imprimir(PUNTOYCOMA);
                 return PUNTOYCOMA;  /* PUNTOYCOMA */
             case 11:
                 AgregarCaracter(caracter);
                 break;
             case 12:
                 AgregarCaracter(caracter);
+                Imprimir(ASIGNACION);
                 return ASIGNACION; /* ASIGNACION */
             case 99:
                 /* situacion rara. ¿cómo la podemos resolver? */
@@ -167,4 +181,18 @@ const char* get_token_name(TOKEN token) {
         return token_names[token];
     }
     return "TOKEN INVALIDO"; 
+}
+
+void Imprimir(TOKEN token)
+{
+
+
+    fprintf(ArchivoDelScanner,"%s --> %s%s",Buffer(),get_token_name(token),"\n");
+
+    if(token == FDT )
+    {
+        fclose(ArchivoDelScanner);
+        ArchivoDelScanner = NULL;
+    }
+    
 }

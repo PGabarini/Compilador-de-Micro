@@ -6,7 +6,9 @@
 #include <stdio.h>
 #include <ctype.h>
 
-void Parser(TOKEN token);
+void Parser(void);
+
+void Programa(void);
 
 void Match(TOKEN token);
 
@@ -24,6 +26,7 @@ void Primaria(void);
 
 void OperadorAditivo(void);
 
-void RepararErrorSintactico(TOKEN token);
+void RepararErrorSintactico(void);
+
 
 #endif

@@ -2,34 +2,38 @@
 #include "parser.h"
 #include <string.h>
 
-TOKEN tokenActual, tokenSiguiente;
+TOKEN  tokenActual;
 
-void Parser(TOKEN token)
+void Parser(void)
 {
-    /* INICIO <listaSentencias> FIN */
-
-    if (token == INICIO)
-
-    {
-        ListaDeSentencias();
-
-        Match(FIN);
-    }
+    /* <objetivo> -> <programa> FDT  */
+        Programa();
+        Match(FDT);
+        puts("FINAAAAL");
+    
 }
 
+void Programa(void)
+{
+    /*<programa> -> INICIO <listaSentencias> FIN*/
+    tokenActual = Scanner();
+    Match(INICIO);
+    ListaDeSentencias();
+    Match(FIN);
+
+}
 
 void ListaDeSentencias(void)
 {
     /* <listaSentencias> -> <sentencia> {<sentencia>} */
-    tokenActual = Scanner();
+    
     Sentencia(); /* la primera de la lista de sentencias */
 
     while (1) 
     { 
-        switch (tokenActual = Scanner()) 
+        switch (tokenActual) 
         {
         
-
         case ID: case LEER: case ESCRIBIR: /* detectó token correcto */ 
             Sentencia(); /* procesa la secuencia opcional */
             break;
@@ -43,25 +47,26 @@ void ListaDeSentencias(void)
 
 void Sentencia(void)
 {
+    
     switch (tokenActual)
     {
     case ID: 
         /* <sentencia> -> ID := <expresion>; */
-         Match(ASIGNACION); Expresion(); Match(PUNTOYCOMA);
+         Match(ID); Match(ASIGNACION); Expresion(); Match(PUNTOYCOMA);
         break;
 
     case LEER: 
         /* <sentencia> -> LEER ( <listaIdentificadores> ); */
-        Match(PARENIZQUIERDO); ListaIdentificadores(); Match(PARENDERECHO); Match(PUNTOYCOMA);
+        Match(LEER); Match(PARENIZQUIERDO); ListaIdentificadores(); Match(PARENDERECHO); Match(PUNTOYCOMA);
         break;
 
     case ESCRIBIR: 
         /* <sentencia> -> ESCRIBIR (<listaExpresiones>); */
-         Match(PARENIZQUIERDO); ListaExpresiones(); Match(PARENDERECHO); Match(PUNTOYCOMA);
+         Match(ESCRIBIR); Match(PARENIZQUIERDO); ListaExpresiones(); Match(PARENDERECHO); Match(PUNTOYCOMA);
         break;
 
     default:
-        RepararErrorSintactico(tokenActual);
+        RepararErrorSintactico();
         break;
     }
 
@@ -73,15 +78,16 @@ void Expresion(void)
     Primaria();
 
     /* <expresion> -> <primaria> {<operadorAditivo> <primaria>} */
-    for (tokenActual = Scanner(); tokenActual == SUMA || tokenActual == RESTA; tokenActual = Scanner())
+    for (; tokenActual == SUMA || tokenActual == RESTA; )
     {
         OperadorAditivo(); Primaria();
     }
+    
 }
 
 void ListaExpresiones(void)
 {
-    tokenActual = Scanner();
+    
     Expresion();
 
     /* <listaExpresiones> -> <expresión> {COMA <expresión>} */
@@ -89,14 +95,14 @@ void ListaExpresiones(void)
     while(1)
 
     {
-        switch (tokenActual = Scanner()) 
+        switch (tokenActual) 
         {
 
-            case ID: 
+            case COMA: 
                 Match(COMA); Expresion();
                 break;
 
-            default:
+            default:              
                 return;
         }
     }
@@ -105,14 +111,15 @@ void ListaExpresiones(void)
 void ListaIdentificadores(void)
 { 
     /* <listaIdentificadores> -> ID {COMA ID} */
+    Match(ID);
 
     while(1)
     {
-        switch (tokenActual = Scanner()) 
+        switch (tokenActual) 
         {
             
-            case ID: 
-                Match(COMA);
+            case COMA: 
+                Match(COMA); Match(ID);
                 break;
 
             default:
@@ -122,25 +129,26 @@ void ListaIdentificadores(void)
 }
 
 void Primaria(void)
-{   
-    tokenActual = Scanner();
-
+{  
     /* <primaria> -> ID | CONSTANTE | PARENIZQUIERDO <expresión> PARENDERECHO */
 
     switch (tokenActual)
     {
-    case ID: 
+    case ID:
+        Match(ID);
         break;
 
-    case CONSTANTE:  
+    case CONSTANTE:
+        Match(CONSTANTE);  
         break;
 
     case PARENIZQUIERDO:
-        Expresion(); Match(PARENDERECHO);
+
+        Match(PARENIZQUIERDO);Expresion(); Match(PARENDERECHO);
         break;
 
     default:
-        RepararErrorSintactico(tokenActual);
+        RepararErrorSintactico();
         break;
     }
 }
@@ -148,36 +156,44 @@ void Primaria(void)
 void OperadorAditivo(void)
 {
     /* <operadorAditivo> -> uno de SUMA RESTA */
-    switch (tokenActual)
-    {
-        case SUMA: case RESTA:
-            break;
-        
-        default:
-            RepararErrorSintactico(tokenActual);
-            break;
-    }
     
+    if (tokenActual == SUMA || tokenActual == RESTA)
+        Match(tokenActual);
+        else
+        RepararErrorSintactico();
+
 }
+    
+
 
 void Match(TOKEN tokenEsperado)
 {   
-    tokenSiguiente = Scanner();
+   
 
-    if(tokenEsperado == tokenSiguiente)
+    if(tokenEsperado == tokenActual)
     {
-        tokenActual = tokenSiguiente;
-        printf("%s"," correcto ");
+        if(tokenActual== FDT)
+        {   
+            printf("%s"," Finaaal");
+            return;
+        }
+        printf("%s%s", get_token_name(tokenActual)," ");
+
+        if(tokenActual== PUNTOYCOMA)
+        {
+            printf(" \n ");
+        }
     }
     else
     {
-        RepararErrorSintactico(tokenActual);
+        RepararErrorSintactico();
     }
 
+    tokenActual = Scanner();
     
 }
 
-void RepararErrorSintactico(TOKEN tokenInvalido) //Por ahora solo avisa
+void RepararErrorSintactico(void) //Por ahora solo avisa
 {
-    printf("%s%s","ERROR: ", tokenInvalido);
+    printf("%s","-ErrorSintactico- ");
 }
